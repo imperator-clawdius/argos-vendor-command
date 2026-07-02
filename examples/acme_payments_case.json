@@ -1,0 +1,92 @@
+{
+  "case_id": "vrc_acme_payments_20260511",
+  "schema_version": "1.0.0",
+  "created_at": "2026-05-11T12:00:00-04:00",
+  "updated_at": "2026-05-11T12:18:00-04:00",
+  "intake": {
+    "requester_id": "teddy_alston",
+    "requester_email": "requester@example.com",
+    "business_unit": "SuiteScrape",
+    "vendor_name": "Acme Payments",
+    "vendor_domain": "acmepayments.example",
+    "requested_service": "Payment orchestration and subscription billing analytics",
+    "contract_value_usd": 36000,
+    "contract_term_months": 12,
+    "data_access_level": "payment",
+    "urgency_level": "expedited",
+    "known_alternatives": ["Stripe", "Paddle", "Chargebee"]
+  },
+  "council_thread": {
+    "chat_id": "demo-council-thread",
+    "thread_id": "vendor-risk-acme-payments-20260511",
+    "manager_agent": "clawdius",
+    "specialist_agents": ["poseidon", "widowmaker"],
+    "protocol_state": "resolved",
+    "markers": [
+      {"agent": "clawdius", "marker": "INTAKE", "timestamp": "2026-05-11T12:01:00-04:00", "summary": "Opened review and routed to specialists."},
+      {"agent": "widowmaker", "marker": "D1", "timestamp": "2026-05-11T12:08:00-04:00", "summary": "No sanctions hit; moderate payment-data risk."},
+      {"agent": "poseidon", "marker": "D1", "timestamp": "2026-05-11T12:12:00-04:00", "summary": "Commercial fit plausible; price benchmark needed."},
+      {"agent": "clawdius", "marker": "SYNTHESIS", "timestamp": "2026-05-11T12:17:00-04:00", "summary": "Approve with controls."},
+      {"agent": "clawdius", "marker": "RESOLVED", "timestamp": "2026-05-11T12:18:00-04:00", "summary": "Case record complete."}
+    ]
+  },
+  "evidence_register": [
+    {"evidence_id": "ev_cyber_001", "domain": "cybersecurity", "source_type": "security_questionnaire", "source_ref": "placeholder://questionnaire/acme-payments", "summary": "Questionnaire requested but incomplete.", "confidence": 60, "collected_by": "widowmaker", "collected_at": "2026-05-11T12:07:00-04:00"},
+    {"evidence_id": "ev_privacy_001", "domain": "data_privacy", "source_type": "contract", "source_ref": "placeholder://contract/acme-payments-draft", "summary": "Payment metadata and customer identifiers require DPA.", "confidence": 75, "collected_by": "widowmaker", "collected_at": "2026-05-11T12:07:30-04:00"},
+    {"evidence_id": "ev_sanctions_001", "domain": "sanctions", "source_type": "api_result", "source_ref": "placeholder://watchlist/acme-payments", "summary": "No sanctions hit in supplied evidence set.", "confidence": 80, "collected_by": "widowmaker", "collected_at": "2026-05-11T12:08:00-04:00"},
+    {"evidence_id": "ev_litigation_001", "domain": "litigation", "source_type": "public_web", "source_ref": "placeholder://litigation-search/acme-payments", "summary": "No material litigation found.", "confidence": 65, "collected_by": "widowmaker", "collected_at": "2026-05-11T12:08:30-04:00"},
+    {"evidence_id": "ev_financial_001", "domain": "financial_stability", "source_type": "financial_record", "source_ref": "placeholder://financial-profile/acme-payments", "summary": "Private vendor; audited financials not supplied.", "confidence": 55, "collected_by": "widowmaker", "collected_at": "2026-05-11T12:09:00-04:00"},
+    {"evidence_id": "ev_dependency_001", "domain": "operational_dependency", "source_type": "internal_note", "source_ref": "placeholder://business-owner-note/suitescrape", "summary": "Service is useful but not merchant of record; exit feasible.", "confidence": 75, "collected_by": "clawdius", "collected_at": "2026-05-11T12:10:00-04:00"},
+    {"evidence_id": "ev_geo_001", "domain": "geographic", "source_type": "vendor_document", "source_ref": "placeholder://vendor-profile/acme-payments", "summary": "Primary operations listed as United States.", "confidence": 70, "collected_by": "widowmaker", "collected_at": "2026-05-11T12:10:30-04:00"},
+    {"evidence_id": "ev_commercial_001", "domain": "commercial", "source_type": "contract", "source_ref": "placeholder://quote/acme-payments", "summary": "Quote plausible but not benchmarked.", "confidence": 80, "collected_by": "poseidon", "collected_at": "2026-05-11T12:12:00-04:00"},
+    {"evidence_id": "ev_reputation_001", "domain": "reputation", "source_type": "public_web", "source_ref": "placeholder://reputation-search/acme-payments", "summary": "No severe reputation issue identified.", "confidence": 65, "collected_by": "widowmaker", "collected_at": "2026-05-11T12:13:00-04:00"}
+  ],
+  "risk_assessment": {
+    "domain_scores": {
+      "cybersecurity": {"score": 45, "rationale": "Assurance incomplete.", "evidence_ids": ["ev_cyber_001"]},
+      "data_privacy": {"score": 58, "rationale": "Payment metadata requires DPA.", "evidence_ids": ["ev_privacy_001"]},
+      "sanctions": {"score": 5, "rationale": "No hit in supplied evidence set.", "evidence_ids": ["ev_sanctions_001"]},
+      "litigation": {"score": 18, "rationale": "No material litigation found.", "evidence_ids": ["ev_litigation_001"]},
+      "financial_stability": {"score": 35, "rationale": "Limited financial evidence.", "evidence_ids": ["ev_financial_001"]},
+      "operational_dependency": {"score": 28, "rationale": "Exit path available.", "evidence_ids": ["ev_dependency_001"]},
+      "geographic": {"score": 12, "rationale": "No elevated jurisdictional exposure.", "evidence_ids": ["ev_geo_001"]},
+      "commercial": {"score": 32, "rationale": "Benchmark required.", "evidence_ids": ["ev_commercial_001"]},
+      "reputation": {"score": 20, "rationale": "No severe reputation issue.", "evidence_ids": ["ev_reputation_001"]}
+    },
+    "weighted_score": 30.98,
+    "risk_level": "moderate",
+    "confidence_score": 69.44,
+    "red_flags": [],
+    "missing_evidence": ["completed_security_questionnaire", "dpa", "soc2_or_equivalent", "price_benchmark"]
+  },
+  "procurement_decision": {
+    "recommendation": "approve_with_controls",
+    "rationale": "Moderate weighted risk driven by payment data access, incomplete security assurance, and missing price benchmark.",
+    "required_controls": [
+      {"control_id": "dpa_required", "title": "Execute DPA or equivalent privacy terms", "owner": "legal", "due_before": "contract_signature", "status": "proposed"},
+      {"control_id": "security_questionnaire", "title": "Complete vendor security questionnaire", "owner": "security", "due_before": "production_access", "status": "proposed"},
+      {"control_id": "soc2_or_equivalent", "title": "Collect SOC 2 Type II or equivalent assurance report", "owner": "security", "due_before": "production_access", "status": "proposed"},
+      {"control_id": "breach_notification_clause", "title": "Add breach notification clause with 72-hour notice window", "owner": "legal", "due_before": "contract_signature", "status": "proposed"},
+      {"control_id": "price_benchmark", "title": "Benchmark quote against at least two alternatives", "owner": "procurement", "due_before": "contract_signature", "status": "proposed"}
+    ],
+    "negotiation_points": ["Request DPA.", "Benchmark pricing.", "Ask for SOC 2 Type II.", "Negotiate data export rights."],
+    "approver_chain": [
+      {"role": "business_owner", "required": true, "status": "pending"},
+      {"role": "security", "required": true, "status": "pending"},
+      {"role": "legal", "required": true, "status": "pending"}
+    ],
+    "residual_risk": "moderate"
+  },
+  "audit": {
+    "agent_actions": [
+      {"agent": "clawdius", "action": "created_case_and_dispatched_specialists", "timestamp": "2026-05-11T12:01:00-04:00", "artifact_id": "vrc_acme_payments_20260511"},
+      {"agent": "widowmaker", "action": "collected_osint_and_risk_evidence", "timestamp": "2026-05-11T12:09:00-04:00", "artifact_id": "ev_cyber_001"},
+      {"agent": "poseidon", "action": "reviewed_commercial_fit_and_quote", "timestamp": "2026-05-11T12:12:00-04:00", "artifact_id": "ev_commercial_001"},
+      {"agent": "clawdius", "action": "synthesized_decision_packet", "timestamp": "2026-05-11T12:17:00-04:00", "artifact_id": "vrc_acme_payments_20260511"}
+    ],
+    "model_versions": {"clawdius": "deepseek/deepseek-v4-flash", "poseidon": "deepseek/deepseek-v4-flash", "widowmaker": "deepseek/deepseek-v4-flash"},
+    "source_artifacts": ["placeholder://questionnaire/acme-payments", "placeholder://contract/acme-payments-draft", "placeholder://quote/acme-payments"],
+    "decision_timestamp": "2026-05-11T12:18:00-04:00",
+    "human_overrides": []
+  }
+}

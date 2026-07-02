@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VendorRiskCase",
+  "type": "object",
+  "required": ["case_id", "schema_version", "created_at", "intake", "council_thread", "evidence_register", "risk_assessment", "procurement_decision", "audit"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "schema_version": {"type": "string"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "intake": {
+      "type": "object",
+      "required": ["requester_id", "business_unit", "vendor_name", "vendor_domain", "requested_service", "contract_value_usd", "data_access_level", "urgency_level"],
+      "properties": {
+        "requester_id": {"type": "string"},
+        "requester_email": {"type": "string"},
+        "business_unit": {"type": "string"},
+        "vendor_name": {"type": "string"},
+        "vendor_domain": {"type": "string"},
+        "requested_service": {"type": "string"},
+        "contract_value_usd": {"type": "number"},
+        "contract_term_months": {"type": "integer"},
+        "data_access_level": {"enum": ["none", "public", "internal", "confidential", "regulated", "payment", "health", "tax"]},
+        "urgency_level": {"enum": ["standard", "expedited", "emergency"]},
+        "known_alternatives": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "council_thread": {
+      "type": "object",
+      "required": ["chat_id", "manager_agent", "specialist_agents", "protocol_state", "markers"],
+      "properties": {
+        "chat_id": {"type": "string"},
+        "thread_id": {"type": "string"},
+        "manager_agent": {"const": "clawdius"},
+        "specialist_agents": {"type": "array", "items": {"enum": ["poseidon", "widowmaker"]}},
+        "protocol_state": {"enum": ["draft", "intake", "specialist_review", "synthesis", "resolved", "escalated", "rejected"]},
+        "markers": {"type": "array"}
+      }
+    },
+    "evidence_register": {"type": "array"},
+    "risk_assessment": {"type": "object"},
+    "procurement_decision": {"type": "object"},
+    "audit": {"type": "object"}
+  }
+}

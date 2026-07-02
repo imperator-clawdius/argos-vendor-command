@@ -1,0 +1,28 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Documented SuiteScrape placeholder API keys"
+regexTarget = "line"
+regexes = [
+  '''Authorization:\s*Bearer\s+(ss_your_key|ss_test_key|ss_\.\.\.)''',
+  '''SUITESCRAPE_API_KEY=(ss_your_key|ss_test_key|ss_\.\.\.)''',
+  '''"SUITESCRAPE_API_KEY":\s*"(ss_your_key|ss_test_key|ss_\.\.\.)"''',
+  '''apiKey['"]?\s*[:,=]\s*['"](ss_your_key|ss_test_key|ss_\.\.\.)['"]''',
+  '''sk_test_placeholder''',
+]
+
+[[allowlists]]
+description = "Supabase public anon keys in public-runtime env names"
+regexTarget = "line"
+paths = ['''(^|/)\.replit$''', '''(^|/)\.env\.example$''']
+regexes = [
+  '''(EXPO_PUBLIC_|NEXT_PUBLIC_)?SUPABASE_ANON_KEY\s*=''',
+]
+
+[[allowlists]]
+description = "Tracked Hermes plugin dashboard build assets"
+paths = [
+  '''(^|/)plugins/hermes-achievements/dashboard/dist/''',
+  '''(^|/)plugins/kanban/dashboard/dist/''',
+]

@@ -1,0 +1,13 @@
+{
+  "requester_id": "",
+  "requester_email": "",
+  "business_unit": "",
+  "vendor_name": "",
+  "vendor_domain": "",
+  "requested_service": "",
+  "contract_value_usd": 0,
+  "contract_term_months": 12,
+  "data_access_level": "internal",
+  "urgency_level": "standard",
+  "known_alternatives": []
+}

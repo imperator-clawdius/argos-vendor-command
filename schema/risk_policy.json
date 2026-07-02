@@ -1,0 +1,36 @@
+{
+  "policy_version": "1.0.0",
+  "score_direction": "0 means no observed risk; 100 means maximum observed risk",
+  "domain_weights": {
+    "cybersecurity": 0.18,
+    "data_privacy": 0.16,
+    "sanctions": 0.14,
+    "litigation": 0.10,
+    "financial_stability": 0.10,
+    "operational_dependency": 0.10,
+    "geographic": 0.07,
+    "commercial": 0.08,
+    "reputation": 0.07
+  },
+  "risk_levels": {
+    "low": {"min": 0, "max": 24.99},
+    "moderate": {"min": 25, "max": 49.99},
+    "high": {"min": 50, "max": 74.99},
+    "critical": {"min": 75, "max": 100}
+  },
+  "control_library": {
+    "dpa_required": {"title": "Execute DPA or equivalent privacy terms", "owner": "legal", "due_before": "contract_signature"},
+    "security_questionnaire": {"title": "Complete vendor security questionnaire", "owner": "security", "due_before": "production_access"},
+    "soc2_or_equivalent": {"title": "Collect SOC 2 Type II or equivalent assurance report", "owner": "security", "due_before": "production_access"},
+    "breach_notification_clause": {"title": "Add breach notification clause with 72-hour notice window", "owner": "legal", "due_before": "contract_signature"},
+    "insurance_certificate": {"title": "Collect cyber/professional liability insurance certificate", "owner": "procurement", "due_before": "first_payment"},
+    "price_benchmark": {"title": "Benchmark quote against at least two alternatives", "owner": "procurement", "due_before": "contract_signature"},
+    "exit_plan": {"title": "Document exit plan and data export path", "owner": "business_owner", "due_before": "production_access"}
+  },
+  "hard_stops": [
+    "confirmed_sanctions_hit",
+    "active_unresolved_customer_data_breach",
+    "legal_control_rejected",
+    "security_control_rejected"
+  ]
+}
