@@ -6,6 +6,16 @@ Operator: Teddy Alston · [teddyalston.com](https://teddyalston.com)
 
 ---
 
+## TL;DR
+
+- **Three agents, one workflow:** Clawdius (manager) dispatches research to Poseidon and Widowmaker (specialists), then synthesizes a risk decision.
+- **7-state machine gates every transition:** `draft → intake → specialist_review → synthesis → resolved / escalated / rejected`. No state is skipped.
+- **Weighted 9-domain risk policy** with hard stops that override all scoring. Override paths exist for false-positive sanctions hits.
+- **Audit trail is a schema requirement:** every case produces a versioned `VendorRiskCase` record with evidence register, domain scores, decision, and closure timestamp.
+- **Failure-driven design:** three documented failures shaped the current architecture (short-circuited review, over-engineered schemas, missing override paths).
+
+---
+
 ## 1. The brief
 
 Vendor Risk Autopilot is a structured multi-agent workflow that handles the full vendor assessment lifecycle — intake, specialist investigation, risk scoring, control recommendation, and auditable closure. Three agents (one manager, two specialists) execute against a shared schema, a weighted risk policy, and a state machine that gates every transition.
@@ -31,6 +41,38 @@ That is the same problem an enterprise vendor risk team has, compressed to opera
 **Peer review baked in.** Both specialists research independently and return evidence before the manager synthesizes. The manager cannot override missing evidence or a hard stop.
 
 ## 4. Architecture
+
+```mermaid
+stateDiagram-v2
+    [*] --> draft
+    draft --> intake: Intake received
+    
+    intake --> specialist_review: Dispatch to Poseidon + Widowmaker
+    
+    state specialist_review {
+        [*] --> d1_poseidon: Commercial evidence
+        [*] --> d1_widowmaker: OSINT evidence
+        d1_poseidon --> d2_poseidon: Follow-up round
+        d1_widowmaker --> d2_widowmaker: Follow-up round
+        d2_poseidon --> d3_poseidon: Final round
+        d2_widowmaker --> d3_widowmaker: Final round
+        d3_poseidon --> complete
+        d3_widowmaker --> complete
+    }
+    
+    specialist_review --> synthesis: Both [D1] posted
+    synthesis --> approve: Low residual risk
+    synthesis --> approve_with_controls: Moderate risk + controls listed
+    synthesis --> escalate: High/critical risk or missing evidence
+    synthesis --> reject: Sanctions hit, active breach
+    
+    approve --> resolved: Audit closed
+    approve_with_controls --> resolved: Controls tracked to owners
+    escalate --> [*]: Human override
+    reject --> [*]: Documented decision
+    
+    note right of specialist_review: Dual-specialist requirement prevents<br/>single-point-of-failure in research
+```
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -103,6 +145,6 @@ The integration guardrail: produce a `VendorRiskCase` record first. Human approv
 
 ---
 
-Related public work: [trident-protocol](https://github.com/imperator-clawdius/trident-protocol) · [launchdesk](https://github.com/imperator-clawdius/launchdesk) · [daybreak](https://github.com/imperator-clawdius/daybreak)
+Related public work: [trident-protocol](https://github.com/imperator-clawdius/trident-protocol) · [helm-ai-receptionist](https://github.com/imperator-clawdius/helm-ai-receptionist) · [daybreak](https://github.com/imperator-clawdius/daybreak) · [noticeops](https://github.com/imperator-clawdius/noticeops)
 
 — Teddy Alston, Orlando, FL
