@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 
@@ -100,14 +101,16 @@ def main() -> int:
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
 
-    case = json.load(args.case_json.open())
+    case = json.loads(args.case_json.read_text(encoding="utf-8"))
     packet = render(case)
     if args.out:
-        args.out.write_text(packet)
+        args.out.write_text(packet, encoding="utf-8")
     else:
         print(packet)
     return 0
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     raise SystemExit(main())

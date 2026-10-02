@@ -3,9 +3,12 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
+
+from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent
 FAILURES: list[str] = []
@@ -20,15 +23,14 @@ def fail(msg: str) -> None:
     FAILURES.append(msg)
 
 
-def load_json(rel: str):
-    path = ROOT / rel
+def load_json(path: Path):
     try:
-        data = json.load(path.open())
-        ok(f"JSON parses: {rel}")
+        data = json.loads(path.read_text(encoding="utf-8"))
+        ok(f"JSON parses: {path.name}")
         return data
-    except Exception as exc:
-        fail(f"JSON parse failed {rel}: {exc}")
-        return {}
+    except (OSError, UnicodeError, ValueError) as exc:
+        fail(f"Cannot read JSON {path.name}: {exc}")
+        return None
 
 
 def risk_level(score: float, policy: dict) -> str | None:
@@ -38,18 +40,7 @@ def risk_level(score: float, policy: dict) -> str | None:
     return None
 
 
-def main() -> int:
-    schema = load_json("schema/vendor_risk_case.schema.json")
-    policy = load_json("schema/risk_policy.json")
-    case = load_json("examples/acme_payments_case.json")
-
-    required = set(schema.get("required", []))
-    for key in ["case_id", "intake", "council_thread", "evidence_register", "risk_assessment", "procurement_decision", "audit"]:
-        if key in required and key in case:
-            ok(f"required top-level field present: {key}")
-        else:
-            fail(f"missing required top-level field: {key}")
-
+def check_case(case: dict, policy: dict) -> None:
     weights = policy.get("domain_weights", {})
     if round(sum(weights.values()), 8) == 1.0:
         ok("risk weights sum to 1.0")
@@ -128,19 +119,47 @@ def main() -> int:
         fail("manager closeout markers invalid")
 
     for rel in ["prompts/clawdius_manager.md", "prompts/widowmaker_osint.md", "prompts/poseidon_commercial.md", "workflows/state_machine.md", "README.md"]:
-        text = (ROOT / rel).read_text()
+        text = (ROOT / rel).read_text(encoding="utf-8")
         if len(text) > 300:
             ok(f"artifact present: {rel}")
         else:
             fail(f"artifact too small: {rel}")
 
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Check a local VendorRiskCase against the bundled schema and risk policy.")
+    parser.add_argument("case_json", nargs="?", type=Path, default=ROOT / "examples/acme_payments_case.json",
+                        help="case JSON path (default: bundled fictional example)")
+    args = parser.parse_args(argv)
+    FAILURES.clear()
+    schema = load_json(ROOT / "schema/vendor_risk_case.schema.json")
+    policy = load_json(ROOT / "schema/risk_policy.json")
+    case = load_json(args.case_json)
+    if FAILURES:
+        return 1
+
+    Draft202012Validator.check_schema(schema)
+    for error in Draft202012Validator(schema).iter_errors(case):
+        location = "/" + "/".join(str(part) for part in error.absolute_path)
+        fail(f"Schema {location}: {error.message}")
+    if not FAILURES:
+        ok("case matches bundled JSON schema")
+        try:
+            check_case(case, policy)
+        except (KeyError, TypeError, ValueError, IndexError, ZeroDivisionError) as exc:
+            # The existing schema leaves the assessment/decision internals open.
+            # An incomplete record must fail rather than crash or pass unchecked.
+            fail(f"Incomplete or invalid case data for policy checks: {exc}")
+
     print("\n== Result ==")
     if FAILURES:
         print(f"FAIL {len(FAILURES)} failure(s)")
         return 1
-    print("PASS vendor risk package is internally consistent")
+    print("PASS case matches the bundled schema and implemented consistency checks")
     return 0
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     sys.exit(main())
