@@ -28,6 +28,7 @@ class CaseWorkflowTests(unittest.TestCase):
         # Exercise default Windows code-page file IO, even if CI enables UTF-8 mode.
         env = os.environ.copy()
         env["PYTHONUTF8"] = "0"
+        env["PYTHONIOENCODING"] = "cp1252"
         return subprocess.run(
             [sys.executable, "-X", "utf8=0", str(ROOT / script), *map(str, args)],
             cwd=self.work, env=env, capture_output=True, text=True,
@@ -46,6 +47,7 @@ class CaseWorkflowTests(unittest.TestCase):
 
     def test_external_unicode_case_validates_and_renders_utf8(self):
         self.case["intake"]["vendor_name"] = "Fictional Caf\u00e9 \u96ea"
+        self.path = self.work / "fictional-\u96ea.json"
         self.write_case()
         result = self.run_cli("validate.py", self.path)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -53,6 +55,16 @@ class CaseWorkflowTests(unittest.TestCase):
         result = self.run_cli("scripts/render_case_packet.py", self.path, "--out", output)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("Fictional Caf\u00e9 \u96ea", output.read_text(encoding="utf-8"))
+        result = self.run_cli("scripts/render_case_packet.py", self.path)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Fictional Caf\u00e9 \u96ea", result.stdout)
+
+    def test_unicode_schema_diagnostic_uses_utf8_stdout(self):
+        self.case["intake"]["data_access_level"] = "\u96ea"
+        self.write_case()
+        result = self.run_cli("validate.py", self.path)
+        self.assert_rejected(result, "data_access_level")
+        self.assertIn("\u96ea", result.stdout)
 
     def test_missing_required_fields_reject_the_supplied_case(self):
         for field in ("schema_version", "created_at"):

@@ -144,7 +144,8 @@ python3 -m unittest discover -s tests -v
 Use Python 3.10 or newer (`python` on Windows). Without a case path, validation
 checks the bundled fictional example. With a path, it checks that local case
 against the committed JSON schema and existing score, evidence-link, control,
-and marker checks. Files are read and written as UTF-8. The renderer formats a
+and marker checks. Files and CLI output use UTF-8, including redirected output
+on Windows. The renderer formats a
 case; run validation first.
 
 These are local consistency checks, not evidence verification or complete
