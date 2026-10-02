@@ -101,6 +101,12 @@ def main() -> int:
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
 
+    if args.out and (
+        args.out.resolve() == args.case_json.resolve()
+        or (args.out.exists() and args.out.samefile(args.case_json))
+    ):
+        parser.error("output must not refer to the input case file; choose a separate packet path")
+
     case = json.loads(args.case_json.read_text(encoding="utf-8"))
     packet = render(case)
     if args.out:

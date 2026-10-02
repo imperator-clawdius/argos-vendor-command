@@ -146,7 +146,8 @@ checks the bundled fictional example. With a path, it checks that local case
 against the committed JSON schema and existing score, evidence-link, control,
 and marker checks. Files and CLI output use UTF-8, including redirected output
 on Windows. The renderer formats a
-case; run validation first.
+case; run validation first. Choose a separate output path: the renderer refuses
+to overwrite the input case, including a symbolic or hard link to that file.
 
 These are local consistency checks, not evidence verification or complete
 enforcement of the documented state machine and hard-stop policy. A passing
