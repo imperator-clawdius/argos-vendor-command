@@ -1,0 +1,11 @@
+ARGOS FICTIONAL PILOT SAMPLE
+
+Prepared from the existing public Acme Payments example on 2026-10-02.
+The PDFs, JSON and Markdown describe a fictional vendor with placeholder evidence.
+No real vendor investigation, approval or customer work is represented.
+The sample workflow is resolved; all three procurement approvals remain pending.
+The JSON and Markdown retain the committed public example's original bytes.
+The one-page PDF is an abridged preview; the full packet includes all nine evidence entries.
+Local schema/consistency validation does not verify evidence or authorize procurement.
+These PDFs are prepared sample documents. The repository renderer exports Markdown.
+Source: https://github.com/imperator-clawdius/argos-vendor-command

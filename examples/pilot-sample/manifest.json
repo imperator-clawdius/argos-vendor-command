@@ -1,0 +1,29 @@
+{
+  "title": "Argos fictional pilot sample",
+  "date": "2026-10-02",
+  "sourceRepository": "https://github.com/imperator-clawdius/argos-vendor-command",
+  "sourceCommit": "dc9d4333c5d373188fac167b1a699c39133dd02f",
+  "scope": "Fictional example only. Evidence is placeholder; procurement approvals are pending.",
+  "archiveMembers": {
+    "argos-acme-fictional-decision-packet.pdf": {
+      "bytes": 48340,
+      "sha256": "13881d52a4046ec5b574b9af6cfc5b17f25cee0a528236e198066708a4ca8a26"
+    },
+    "argos-acme-fictional-one-page.pdf": {
+      "bytes": 42946,
+      "sha256": "b6b1b3c62bbe427188680c08a268a0bedac992553783b23c6b5a9b7ba7fae298"
+    },
+    "acme_payments_case.json": {
+      "bytes": 8401,
+      "sha256": "137aa51f8f9a872ed665d7f3b781fa77105a9908f6185df86a5f596cc2584e3f"
+    },
+    "acme_payments_packet.md": {
+      "bytes": 3537,
+      "sha256": "3a4ecc6ea6e258ff9b8e79029965c4b0874ed72259f2f075e8d411abb9c48fe6"
+    },
+    "sample-notes.txt": {
+      "bytes": 744,
+      "sha256": "014ed8f7076727bf83d0e898c6448d691f7b018bdef1326263f8e53e28d3cda8"
+    }
+  }
+}
