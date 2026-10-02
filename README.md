@@ -134,8 +134,24 @@ workflows/state_machine.md          — State definitions and transition rules
 ### Run validation
 
 ```bash
+python3 -m pip install -r requirements.txt
 python3 validate.py
+python3 validate.py /path/to/completed-case.json
+python3 scripts/render_case_packet.py /path/to/completed-case.json --out decision-packet.md
+python3 -m unittest discover -s tests -v
 ```
+
+Use Python 3.10 or newer (`python` on Windows). Without a case path, validation
+checks the bundled fictional example. With a path, it checks that local case
+against the committed JSON schema and existing score, evidence-link, control,
+and marker checks. Files are read and written as UTF-8. The renderer formats a
+case; run validation first.
+
+These are local consistency checks, not evidence verification or complete
+enforcement of the documented state machine and hard-stop policy. A passing
+case still requires human review of evidence, recommendation, and approvals.
+The Windows/Linux workflow uses only synthetic local fixtures and makes no
+agent, procurement, or payment calls.
 
 ## Integration
 
