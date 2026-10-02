@@ -4,6 +4,24 @@
 
 Operator: Teddy Alston · [teddyalston.com](https://teddyalston.com)
 
+This repository contains the reference architecture, prompts, case schema and
+local validation/packet tools. The agent orchestration described below is not
+packaged here as a runnable service.
+
+### Fictional sample deliverable
+
+- [One-page preview (PDF)](examples/pilot-sample/argos-acme-fictional-one-page.pdf)
+- [Full four-page decision packet (PDF)](examples/pilot-sample/argos-acme-fictional-decision-packet.pdf)
+- [Download the sample pack (ZIP)](examples/pilot-sample/argos-fictional-sample-pack.zip)
+
+The pack includes both PDFs, the original public JSON and Markdown example,
+notes and a [SHA-256 manifest](examples/pilot-sample/manifest.json). Acme Payments
+is fictional; its nine evidence entries are placeholders. The workflow is
+marked resolved, while all three procurement approvals remain pending. This
+shows the deliverable format and does not represent completed customer work or
+verified vendor evidence. These are prepared sample PDFs; the repository's
+renderer exports Markdown.
+
 ---
 
 ## TL;DR
