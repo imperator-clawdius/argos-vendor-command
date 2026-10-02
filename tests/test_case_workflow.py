@@ -115,6 +115,40 @@ class CaseWorkflowTests(unittest.TestCase):
         self.assertEqual(output.read_text(encoding="utf-8"),
                          (ROOT / "examples/acme_payments_packet.md").read_text(encoding="utf-8"))
 
+    def assert_source_preserved(self, output):
+        original = self.path.read_bytes()
+        result = self.run_cli("scripts/render_case_packet.py", self.path, "--out", output)
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("output must not refer to the input case file", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertEqual(self.path.read_bytes(), original)
+
+    def test_renderer_refuses_same_source_and_relative_alias(self):
+        for output in (self.path, Path("fictional-case.json")):
+            with self.subTest(output=str(output)):
+                self.write_case()
+                self.assert_source_preserved(output)
+
+    def test_renderer_refuses_hard_link_to_source(self):
+        self.write_case()
+        output = self.work / "packet.md"
+        try:
+            os.link(self.path, output)
+        except OSError as exc:
+            self.skipTest(f"Fixture filesystem does not support hard links: {exc}")
+        self.assert_source_preserved(output)
+        self.assertEqual(output.read_bytes(), self.path.read_bytes())
+
+    def test_renderer_refuses_symbolic_link_to_source(self):
+        self.write_case()
+        output = self.work / "packet.md"
+        try:
+            output.symlink_to(self.path)
+        except OSError as exc:
+            self.skipTest(f"Fixture filesystem does not allow symbolic links: {exc}")
+        self.assert_source_preserved(output)
+        self.assertEqual(output.read_bytes(), self.path.read_bytes())
+
 
 if __name__ == "__main__":
     unittest.main()
